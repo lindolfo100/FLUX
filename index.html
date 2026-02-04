@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#050b08" />
+  <title>Fluxo • Finanças Pessoais</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="hero">
+      <div>
+        <p class="tag">Fluxo</p>
+        <h1>Controle financeiro sem atrito.</h1>
+        <p class="subtitle">Dark Premium, rápido, offline e feito para o celular.</p>
+      </div>
+      <div class="balance-card glass">
+        <div>
+          <span class="label">Saldo atual</span>
+          <strong id="current-balance">R$ 0,00</strong>
+        </div>
+        <div class="balance-row">
+          <div>
+            <span class="label">Entradas</span>
+            <p id="month-income">R$ 0,00</p>
+          </div>
+          <div>
+            <span class="label">Saídas</span>
+            <p id="month-expense">R$ 0,00</p>
+          </div>
+        </div>
+        <div class="daily-safe">
+          <span class="label">Seguro diário</span>
+          <strong id="daily-safe">R$ 0,00</strong>
+        </div>
+      </div>
+    </header>
+
+    <section class="smart-input glass">
+      <h2>Smart Input</h2>
+      <p class="hint">Digite algo como <em>"Pizza 80"</em> ou <em>"Salário 4500"</em>.</p>
+      <div class="input-row">
+        <input id="smart-input" type="text" placeholder="Descreva o gasto ou receita..." autocomplete="off" />
+        <button id="add-transaction">Adicionar</button>
+      </div>
+      <div class="smart-preview" id="smart-preview">
+        <span>Descrição:</span> <strong id="preview-desc">-</strong>
+        <span>Categoria:</span> <strong id="preview-category">-</strong>
+        <span>Valor:</span> <strong id="preview-amount">-</strong>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="panel glass">
+        <div class="panel-header">
+          <h2>Metas do mês</h2>
+          <span class="label">Edite tocando nos valores</span>
+        </div>
+        <div class="goals" id="goals"></div>
+      </div>
+
+      <div class="panel glass">
+        <div class="panel-header">
+          <h2>Gastos fixos</h2>
+          <button class="ghost" id="add-fixed">+ Novo</button>
+        </div>
+        <div class="fixed-list" id="fixed-list"></div>
+      </div>
+    </section>
+
+    <section class="panel glass">
+      <div class="panel-header">
+        <h2>Extrato</h2>
+        <div class="filters">
+          <select id="filter-type">
+            <option value="all">Tudo</option>
+            <option value="expense">Saídas</option>
+            <option value="income">Entradas</option>
+          </select>
+          <select id="filter-category"></select>
+        </div>
+      </div>
+      <div id="statement" class="statement"></div>
+    </section>
+
+    <section class="panel glass">
+      <div class="panel-header">
+        <h2>Privacidade & Portabilidade</h2>
+      </div>
+      <div class="actions">
+        <button class="ghost" id="export-csv">Exportar CSV</button>
+        <button class="ghost" id="export-json">Backup JSON</button>
+        <label class="ghost file">
+          Importar CSV/JSON
+          <input id="import-file" type="file" accept=".csv,.json" />
+        </label>
+      </div>
+      <p class="hint">Seus dados ficam 100% no seu dispositivo (LocalStorage).</p>
+    </section>
+
+    <footer>
+      <p>Fluxo • PWA Ready • Offline First</p>
+    </footer>
+  </div>
+
+  <template id="goal-template">
+    <div class="goal">
+      <div>
+        <span class="label"></span>
+        <div class="progress">
+          <div class="progress-bar"></div>
+        </div>
+      </div>
+      <button class="goal-value"></button>
+    </div>
+  </template>
+
+  <template id="fixed-template">
+    <div class="fixed-item">
+      <div>
+        <strong></strong>
+        <span class="label"></span>
+      </div>
+      <button class="ghost remove">Remover</button>
+    </div>
+  </template>
+
+  <template id="statement-group-template">
+    <div class="statement-group">
+      <h3></h3>
+      <div class="statement-items"></div>
+    </div>
+  </template>
+
+  <template id="statement-item-template">
+    <div class="statement-item">
+      <div>
+        <strong></strong>
+        <span class="label"></span>
+      </div>
+      <span class="amount"></span>
+    </div>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
