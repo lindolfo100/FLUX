@@ -1,0 +1,16 @@
+{
+  "name": "Fluxo",
+  "short_name": "Fluxo",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#050b08",
+  "theme_color": "#050b08",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
