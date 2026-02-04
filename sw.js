@@ -1,11 +1,11 @@
 const CACHE_NAME = "fluxo-cache-v1";
 const ASSETS = [
-  "/",
-  "/index.html",
-  "/styles.css",
-  "/app.js",
-  "/manifest.json",
-  "/icon.svg",
+  "./",
+  "./index.html",
+  "./styles.css",
+  "./app.js",
+  "./manifest.json",
+  "./icon.svg",
 ];
 
 self.addEventListener("install", (event) => {
