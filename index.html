@@ -15,6 +15,10 @@
         <p class="tag">Fluxo</p>
         <h1>Controle financeiro sem atrito.</h1>
         <p class="subtitle">Dark Premium, rápido, offline e feito para o celular.</p>
+        <div class="hero-actions">
+          <button class="primary">Nova entrada</button>
+          <button class="ghost">Ver metas</button>
+        </div>
       </div>
       <div class="balance-card glass">
         <div>
@@ -52,6 +56,24 @@
       </div>
     </section>
 
+    <section class="widget-row">
+      <div class="widget glass">
+        <span class="label">Balanço semanal</span>
+        <strong id="weekly-balance">R$ 0,00</strong>
+        <p class="hint">Últimos 7 dias</p>
+      </div>
+      <div class="widget glass">
+        <span class="label">Meta em destaque</span>
+        <strong id="spotlight-goal">-</strong>
+        <p class="hint">Categoria mais próxima do limite</p>
+      </div>
+      <div class="widget glass">
+        <span class="label">Média diária</span>
+        <strong id="daily-average">R$ 0,00</strong>
+        <p class="hint">Gastos do mês</p>
+      </div>
+    </section>
+
     <section class="grid">
       <div class="panel glass">
         <div class="panel-header">
@@ -68,6 +90,15 @@
         </div>
         <div class="fixed-list" id="fixed-list"></div>
       </div>
+    </section>
+
+    <section class="panel glass chart-panel">
+      <div class="panel-header">
+        <h2>Panorama</h2>
+        <span class="label">Distribuição por categoria</span>
+      </div>
+      <canvas id="category-chart" width="600" height="280"></canvas>
+      <div class="chart-legend" id="chart-legend"></div>
     </section>
 
     <section class="panel glass">

@@ -28,6 +28,9 @@ const elements = {
   monthIncome: document.getElementById("month-income"),
   monthExpense: document.getElementById("month-expense"),
   dailySafe: document.getElementById("daily-safe"),
+  weeklyBalance: document.getElementById("weekly-balance"),
+  spotlightGoal: document.getElementById("spotlight-goal"),
+  dailyAverage: document.getElementById("daily-average"),
   smartInput: document.getElementById("smart-input"),
   addTransaction: document.getElementById("add-transaction"),
   smartPreview: document.getElementById("smart-preview"),
@@ -38,6 +41,8 @@ const elements = {
   fixedList: document.getElementById("fixed-list"),
   addFixed: document.getElementById("add-fixed"),
   statement: document.getElementById("statement"),
+  categoryChart: document.getElementById("category-chart"),
+  chartLegend: document.getElementById("chart-legend"),
   filterType: document.getElementById("filter-type"),
   filterCategory: document.getElementById("filter-category"),
   exportCsv: document.getElementById("export-csv"),
@@ -159,6 +164,13 @@ const getMonthTransactions = () => {
   });
 };
 
+const getRecentTransactions = (days) => {
+  const now = new Date();
+  const cutoff = new Date(now);
+  cutoff.setDate(now.getDate() - days);
+  return state.transactions.filter((item) => new Date(item.date) >= cutoff);
+};
+
 const calculateSummary = () => {
   const monthItems = getMonthTransactions();
   const income = monthItems.filter((t) => t.type === "income").reduce((sum, t) => sum + t.amount, 0);
@@ -183,6 +195,67 @@ const renderSummary = () => {
   elements.monthIncome.textContent = currency.format(income);
   elements.monthExpense.textContent = currency.format(expense);
   elements.dailySafe.textContent = currency.format(calculateDailySafe());
+};
+
+const renderWidgets = () => {
+  const lastWeek = getRecentTransactions(7);
+  const weekIncome = lastWeek.filter((t) => t.type === "income").reduce((sum, t) => sum + t.amount, 0);
+  const weekExpense = lastWeek.filter((t) => t.type === "expense").reduce((sum, t) => sum + t.amount, 0);
+  elements.weeklyBalance.textContent = currency.format(weekIncome - weekExpense);
+
+  const monthExpenses = getMonthTransactions().filter((t) => t.type === "expense");
+  const totalExpense = monthExpenses.reduce((sum, t) => sum + t.amount, 0);
+  const daysElapsed = new Date().getDate();
+  elements.dailyAverage.textContent = currency.format(totalExpense / Math.max(daysElapsed, 1));
+
+  const spotlight = Object.entries(state.categoryGoals).map(([category, goal]) => {
+    const used = monthExpenses.filter((t) => t.category === category).reduce((sum, t) => sum + t.amount, 0);
+    return { category, used, goal, ratio: goal ? used / goal : 0 };
+  });
+  spotlight.sort((a, b) => b.ratio - a.ratio);
+  const top = spotlight[0];
+  elements.spotlightGoal.textContent = top ? `${top.category} • ${Math.round(top.ratio * 100)}%` : "-";
+};
+
+const drawChart = () => {
+  const canvas = elements.categoryChart;
+  if (!canvas) return;
+  const context = canvas.getContext("2d");
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * window.devicePixelRatio;
+  canvas.height = 260 * window.devicePixelRatio;
+  context.scale(window.devicePixelRatio, window.devicePixelRatio);
+  context.clearRect(0, 0, rect.width, 260);
+
+  const categories = Object.keys(state.categoryGoals);
+  const monthExpenses = getMonthTransactions().filter((t) => t.type === "expense");
+  const totals = categories.map((category) =>
+    monthExpenses.filter((t) => t.category === category).reduce((sum, t) => sum + t.amount, 0),
+  );
+  const maxValue = Math.max(...totals, 1);
+  const barWidth = rect.width / (categories.length * 1.4);
+  const gap = barWidth * 0.4;
+  const baseY = 220;
+
+  const colors = ["#0df26c", "#5ef9a6", "#2ad0ff", "#9b7bff", "#ff7a90"];
+  categories.forEach((category, index) => {
+    const value = totals[index];
+    const height = (value / maxValue) * 140;
+    const x = 20 + index * (barWidth + gap);
+    const y = baseY - height;
+    context.fillStyle = colors[index % colors.length];
+    context.globalAlpha = 0.9;
+    context.fillRect(x, y, barWidth, height);
+    context.globalAlpha = 1;
+  });
+
+  elements.chartLegend.innerHTML = "";
+  categories.forEach((category, index) => {
+    const legend = document.createElement("div");
+    legend.className = "legend-item";
+    legend.innerHTML = `<span class="legend-swatch" style="background:${colors[index % colors.length]}"></span>${category}`;
+    elements.chartLegend.appendChild(legend);
+  });
 };
 
 const renderGoals = () => {
@@ -394,10 +467,12 @@ const addFixedCost = () => {
 
 const render = () => {
   renderSummary();
+  renderWidgets();
   renderGoals();
   renderFixedCosts();
   renderFilters();
   renderStatement();
+  drawChart();
 };
 
 const init = () => {
@@ -417,6 +492,9 @@ const init = () => {
   elements.exportCsv.addEventListener("click", exportCsv);
   elements.exportJson.addEventListener("click", exportJson);
   elements.importFile.addEventListener("change", importFile);
+  window.addEventListener("resize", () => {
+    drawChart();
+  });
 };
 
 if ("serviceWorker" in navigator) {

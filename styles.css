@@ -49,6 +49,15 @@ button {
   cursor: pointer;
 }
 
+.primary {
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #02140a;
+  font-weight: 700;
+  box-shadow: 0 12px 30px rgba(13, 242, 108, 0.25);
+}
+
 .app {
   max-width: 980px;
   margin: 0 auto;
@@ -62,6 +71,13 @@ button {
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.hero-actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .tag {
@@ -88,6 +104,28 @@ h1 {
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 24px;
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top, rgba(255, 255, 255, 0.08), transparent 55%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.glass:hover::after {
+  opacity: 1;
+}
+
+.glass:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
 }
 
 .balance-card {
@@ -154,6 +192,22 @@ h1 {
   gap: 12px;
   color: var(--muted);
   font-size: 0.9rem;
+}
+
+.widget-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.widget {
+  padding: 16px;
+  display: grid;
+  gap: 6px;
+}
+
+.widget strong {
+  font-size: 1.4rem;
 }
 
 .grid {
@@ -235,6 +289,33 @@ h1 {
   color: var(--text);
 }
 
+.chart-panel canvas {
+  width: 100%;
+  border-radius: 16px;
+  background: rgba(5, 11, 8, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.legend-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
 .statement {
   display: grid;
   gap: 16px;
@@ -288,6 +369,21 @@ footer {
   text-align: center;
   color: var(--muted);
   font-size: 0.85rem;
+}
+
+@keyframes floatIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.app > * {
+  animation: floatIn 0.5s ease both;
 }
 
 @media (min-width: 768px) {
